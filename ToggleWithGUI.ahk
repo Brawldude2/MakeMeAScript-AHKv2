@@ -3,6 +3,8 @@
 ;Toggle with gui by u/PixelPerfect41, Enjoy!
 
 RUNNING := false
+
+ALWAYS_ON_TOP := true
 RUN_RIGHT_OFF := false
 TIMER_DURATION_SECONDS := 1
 
@@ -36,8 +38,16 @@ onClick(Button,*){ ;When the button is clicked
     }
 }
 
+GetGUIOptions(){
+	opt := ""
+	if(ALWAYS_ON_TOP){
+		opt := opt "+AlwaysOnTop"
+	}
+	return opt
+}
+
 CreateGUI(){
-    UI := Gui()
+    UI := Gui(GetGUIOptions())
     UI.Title := "YOUR TITLE"
     UI.OnEvent('Close', (*) => ExitApp())
     UI.SetFont("s18")
