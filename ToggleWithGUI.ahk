@@ -13,8 +13,15 @@ ALWAYS_ON_TOP := true
 ;------------------------------
 
 ;---------Main Program---------
-MButton::HoldToToggle("MButton") ;Example with the middle mouse button
-q::HoldToToggle("q") ;Example with the q key
+/*
+    Some examples:
+    MButton::HoldToToggle("MButton") ;Hold middle mouse button to enable and release to disable toggle
+    q::HoldToToggle("q") ;Hold "q" to enable and release to disable toggle
+    w::EnableToggle() ;Enable toggle with w key
+    ^w::DisableToggle() ;Disable toggle with ctrl+w key
+*/
+w::EnableToggle() ;Enable toggle with w key
+^w::DisableToggle() ;Disable toggle with ctrl+w key
 RUNNING := false
 if(GUI_Mode){
     UI := CreateGUI()
