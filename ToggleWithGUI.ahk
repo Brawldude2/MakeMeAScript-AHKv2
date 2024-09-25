@@ -1,19 +1,25 @@
 ﻿#Requires AutoHotkey v2.0
 #SingleInstance Ignore
-;Toggle with gui by u/PixelPerfect41, Enjoy!
+;Toggle helper by u/PixelPerfect41, Enjoy!
 
-;-----------Settings-----------
-ALWAYS_ON_TOP := true
+;-------Program Settings-------
+GUI_Mode := true
 RUN_RIGHT_OFF := false
-TIMER_DURATION_SECONDS := 1
+TIMER_DURATION_SECONDS := 0.1
+;------------------------------
+
+;---------GUI Settings---------
+ALWAYS_ON_TOP := true
 ;------------------------------
 
 ;---------Main Program---------
-^q::EnableToggle()
-^s::DisableToggle()
+MButton::HoldToToggle("MButton") ;Example with the middle mouse button
+q::HoldToToggle("q") ;Example with the q key
 RUNNING := false
-UI := CreateGUI()
-UI.Show("w200 h124")
+if(GUI_Mode){
+    UI := CreateGUI()
+    UI.Show("w200 h124")
+}
 ;------------------------------
 
 RunOnceWhenToggled(){
@@ -30,23 +36,33 @@ RunPeriodicallyWhenToggled(){
 
 EnableToggle(){
     global RUNNING
-    global UI
     RunOnceWhenToggled()
     if(RUN_RIGHT_OFF){
         SetTimer(RunPeriodicallyWhenToggled,-1) ;Run immediately when start is pressed
     }
     SetTimer(RunPeriodicallyWhenToggled,TIMER_DURATION_SECONDS*1000) ;Repeat every 2 minutes
     RUNNING := true
-    UI["Ctrl_StartStop"].Text := "STOP"
+    if(GUI_Mode){
+        global UI
+        UI["Ctrl_StartStop"].Text := "STOP"
+    }
 }
 
 DisableToggle(){
     global RUNNING
-    global UI
     SetTimer(RunPeriodicallyWhenToggled,0) ;Disable the timer
     RUNNING := false
-    UI["Ctrl_StartStop"].Text := "START"
+    if(GUI_Mode){
+        global UI
+        UI["Ctrl_StartStop"].Text := "START"
+    }
 
+}
+
+HoldToToggle(key){
+    EnableToggle()
+    KeyWait(key)
+    DisableToggle()
 }
 
 onClick(Button,*){ ;When the button is clicked
