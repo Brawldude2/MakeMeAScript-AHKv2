@@ -28,6 +28,7 @@ if(GUI_Mode){
 }
 ;------------------------------
 
+;----------------------------------Customisable functions------------------------------------
 RunOnceWhenToggled(){
     ;Inside of this function will run once when toggled
     Run("notepad",,,&oPID)
@@ -39,6 +40,14 @@ RunPeriodicallyWhenToggled(){
     ;Inside of this function will run continuosly with set amount of delay when toggle in on
     Send("e")
 }
+
+RunWhenToggleIsDisabled(){
+    ;Inside of this function will run once the toggle is turned off
+    if(WinExist("ahk_exe notepad.exe")){
+        WinKill("ahk_exe notepad.exe")
+    }
+}
+;--------------------------------------------------------------------------------------------
 
 EnableToggle(){
     global RUNNING
@@ -57,6 +66,7 @@ EnableToggle(){
 DisableToggle(){
     global RUNNING
     SetTimer(RunPeriodicallyWhenToggled,0) ;Disable the timer
+    RunWhenToggleIsDisabled()
     RUNNING := false
     if(GUI_Mode){
         global UI
