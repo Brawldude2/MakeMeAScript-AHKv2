@@ -1,5 +1,5 @@
 ﻿#Requires AutoHotkey v2.0
-#SingleInstance Ignore
+#SingleInstance Force
 ;Toggle helper by u/PixelPerfect41, Enjoy!
 
 ;-------Program Settings-------
@@ -20,8 +20,7 @@ ALWAYS_ON_TOP := true
     w::EnableToggle() ;Enable toggle with w key
     ^w::DisableToggle() ;Disable toggle with ctrl+w key
 */
-w::EnableToggle() ;Enable toggle with w key
-^w::DisableToggle() ;Disable toggle with ctrl+w key
+q::HoldToToggle("q") ;Hold "q" to enable and release to disable toggle
 RUNNING := false
 if(GUI_Mode){
     UI := CreateGUI()
