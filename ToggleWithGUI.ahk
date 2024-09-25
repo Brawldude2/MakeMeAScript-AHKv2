@@ -2,39 +2,58 @@
 #SingleInstance Ignore
 ;Toggle with gui by u/PixelPerfect41, Enjoy!
 
-RUNNING := false
-
+;-----------Settings-----------
 ALWAYS_ON_TOP := true
 RUN_RIGHT_OFF := false
 TIMER_DURATION_SECONDS := 1
+;------------------------------
 
+;---------Main Program---------
+^q::EnableToggle()
+^s::DisableToggle()
+RUNNING := false
 UI := CreateGUI()
 UI.Show("w200 h124")
+;------------------------------
 
 RunOnceWhenToggled(){
+    ;Inside of this function will run once when toggled
     Run("notepad",,,&oPID)
     WinWait("ahk_pid " oPID)
     WinActivate("ahk_pid " oPID)
 }
 
 RunPeriodicallyWhenToggled(){
+    ;Inside of this function will run continuosly with set amount of delay when toggle in on
     Send("e")
 }
 
-onClick(Button,*){ ;When the button is clicked
+EnableToggle(){
     global RUNNING
+    global UI
+    RunOnceWhenToggled()
+    if(RUN_RIGHT_OFF){
+        SetTimer(RunPeriodicallyWhenToggled,-1) ;Run immediately when start is pressed
+    }
+    SetTimer(RunPeriodicallyWhenToggled,TIMER_DURATION_SECONDS*1000) ;Repeat every 2 minutes
+    RUNNING := true
+    UI["Ctrl_StartStop"].Text := "STOP"
+}
+
+DisableToggle(){
+    global RUNNING
+    global UI
+    SetTimer(RunPeriodicallyWhenToggled,0) ;Disable the timer
+    RUNNING := false
+    UI["Ctrl_StartStop"].Text := "START"
+
+}
+
+onClick(Button,*){ ;When the button is clicked
     if(RUNNING){
-        SetTimer(RunPeriodicallyWhenToggled,0) ;Disable the timer
-        RUNNING := false
-        Button.Text := "START"
+        DisableToggle()
     }else{
-        RunOnceWhenToggled()
-        if(RUN_RIGHT_OFF){
-            SetTimer(RunPeriodicallyWhenToggled,-1) ;Run immediately when start is pressed
-        }
-        SetTimer(RunPeriodicallyWhenToggled,TIMER_DURATION_SECONDS*1000) ;Repeat every 2 minutes
-        RUNNING := true
-        Button.Text := "STOP"
+        EnableToggle()
     }
 }
 
