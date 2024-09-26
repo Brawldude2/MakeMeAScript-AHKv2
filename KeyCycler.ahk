@@ -1,4 +1,6 @@
 #Requires AutoHotkey v2.0 
+#SingleInstance Force
+;KeyCycler by u/PixelPerfect41 enjoy!
 
 c := Cycler() ;Create a new "Cycler" object
 c.Delay := 100 ;Set delay between key presses to 100 ms
