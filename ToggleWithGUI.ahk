@@ -19,6 +19,7 @@ ALWAYS_ON_TOP := true
     q::HoldToToggle("q") ;Hold "q" to enable and release to disable toggle
     w::EnableToggle() ;Enable toggle with w key
     ^w::DisableToggle() ;Disable toggle with ctrl+w key
+    b::SwitchToggle() ;If toggle is on turns it off, If toggle is off turns it on
 */
 q::HoldToToggle("q") ;Hold "q" to enable and release to disable toggle
 RUNNING := false
@@ -79,6 +80,14 @@ HoldToToggle(key){
     EnableToggle()
     KeyWait(key)
     DisableToggle()
+}
+
+SwitchToggle(){
+    if(RUNNING){
+        DisableToggle()
+    }else{
+        EnableToggle()
+    }
 }
 
 onClick(Button,*){ ;When the button is clicked
