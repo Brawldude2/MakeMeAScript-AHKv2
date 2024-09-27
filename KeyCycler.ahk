@@ -15,7 +15,6 @@ $^v::c.Start() ;Press (Ctrl + t) to start cycling until stopped
 $v::c.Stop() ;Press (t) to stop cycling
 
 
-
 ;----------Don't touch here----------
 
 class CycleKey{
@@ -30,19 +29,27 @@ class Cycler{
     KeyMap := Map()
     Running := false
     Delay := 100 ;In miliseconds
+    ActiveKeyCount := 0
 
     AddKey(key,state:=true){
         cKey := CycleKey(key,state)
         this.AddedKeys.Push(cKey)
         this.KeyMap[cKey.key] := this.AddedKeys.Length
+        if(state){
+            this.ActiveKeyCount+=1
+        }
     }
 
     EnableKey(key){
         this.AddedKeys[this.KeyMap[key]].state := true
+        if(!this.AddedKeys[this.KeyMap[key]].state){ ;Not reenabling while already enabled
+            this.ActiveKeyCount += 1
+        }
     }
 
     DisableKey(key){
         this.AddedKeys[this.KeyMap[key]].state := false
+        this.ActiveKeyCount -= 1
     }
 
     CycleKeys(){
@@ -61,6 +68,9 @@ class Cycler{
         this.Running := true
         while(this.Running){
             this.CycleKeys()
+            if(this.ActiveKeyCount==0){
+                Sleep(50) ;CPU load protection when all keys are disabled
+            }
         }
     }
     
