@@ -1,6 +1,7 @@
 ﻿#Requires AutoHotkey v2.0
 #SingleInstance Force
 ;Toggle helper by u/PixelPerfect41, Enjoy!
+;Get the original code here: https://github.com/Brawldude2/MakeMeAScript-AHKv2/blob/main/ToggleWithGUI.ahk
 
 ;-------Program Settings-------
 GUI_Mode := true
@@ -52,7 +53,9 @@ RunWhenToggleIsDisabled(){
 
 EnableToggle(){
     global RUNNING
-    RunOnceWhenToggled()
+    if(!RUNNING){ ;Disabled to Enabled
+        RunOnceWhenToggled()
+    }
     if(RUN_RIGHT_OFF){
         SetTimer(RunPeriodicallyWhenToggled,-1) ;Run immediately when start is pressed
     }
@@ -67,7 +70,9 @@ EnableToggle(){
 DisableToggle(){
     global RUNNING
     SetTimer(RunPeriodicallyWhenToggled,0) ;Disable the timer
-    RunWhenToggleIsDisabled()
+    if(RUNNING){ ;Enabled to Disabled
+        RunWhenToggleIsDisabled()
+    }  
     RUNNING := false
     if(GUI_Mode){
         global UI
