@@ -1,5 +1,6 @@
 ﻿#Requires AutoHotkey v2.0
 #SingleInstance Force
+#MaxThreadsPerHotkey 1
 ;Toggle helper by u/PixelPerfect41, Enjoy!
 ;Get the original code here: https://github.com/Brawldude2/MakeMeAScript-AHKv2/blob/main/ToggleWithGUI.ahk
 
