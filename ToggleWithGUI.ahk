@@ -1,13 +1,12 @@
 ﻿#Requires AutoHotkey v2.0
 #SingleInstance Force
-#MaxThreadsPerHotkey 1
 ;Toggle helper by u/PixelPerfect41, Enjoy!
 ;Get the original code here: https://github.com/Brawldude2/MakeMeAScript-AHKv2/blob/main/ToggleWithGUI.ahk
 
 ;-------Program Settings-------
 GUI_Mode := true
 RUN_RIGHT_OFF := false
-TIMER_DURATION_SECONDS := 0.1
+TIMER_DURATION_MS := 100
 ;------------------------------
 
 ;---------GUI Settings---------
@@ -54,13 +53,14 @@ RunWhenToggleIsDisabled(){
 
 EnableToggle(){
     global RUNNING
-    if(!RUNNING){ ;Disabled to Enabled
-        RunOnceWhenToggled()
+    if(RUNNING){ ;Prevent enabling twice
+        return
     }
+    RunOnceWhenToggled()
     if(RUN_RIGHT_OFF){
         SetTimer(RunPeriodicallyWhenToggled,-1) ;Run immediately when start is pressed
     }
-    SetTimer(RunPeriodicallyWhenToggled,TIMER_DURATION_SECONDS*1000) ;Repeat every 2 minutes
+    SetTimer(RunPeriodicallyWhenToggled,TIMER_DURATION_MS)
     RUNNING := true
     if(GUI_Mode){
         global UI
@@ -70,16 +70,16 @@ EnableToggle(){
 
 DisableToggle(){
     global RUNNING
+    if(!RUNNING){ ;Prevent disabling twice
+        return
+    }
     SetTimer(RunPeriodicallyWhenToggled,0) ;Disable the timer
-    if(RUNNING){ ;Enabled to Disabled
-        RunWhenToggleIsDisabled()
-    }  
+    RunWhenToggleIsDisabled()
     RUNNING := false
     if(GUI_Mode){
         global UI
         UI["Ctrl_StartStop"].Text := "START"
     }
-
 }
 
 HoldToToggle(key){
@@ -97,10 +97,10 @@ SwitchToggle(){
 }
 
 onClick(Button,*){ ;When the button is clicked
-    if(RUNNING){
-        DisableToggle()
-    }else{
+    if(!RUNNING){
         EnableToggle()
+    }else{
+        DisableToggle()
     }
 }
 
@@ -115,7 +115,7 @@ GetGUIOptions(){
 CreateGUI(){
     UI := Gui(GetGUIOptions())
     UI.Title := "YOUR TITLE"
-    UI.OnEvent('Close', (*) => ExitApp())
+    UI.OnEvent("Close", (*) => ExitApp())
     UI.SetFont("s18")
 
     StartStop := UI.Add("Button","w200 h124 x0 y0 vCtrl_StartStop","START")
